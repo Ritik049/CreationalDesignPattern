@@ -1,1 +1,139 @@
+Factory Design Pattern: It is used to create object of superclass, but allows subclass to alter the type of object.
+
+//Problems: <Without Design Pattern>
+
+
+Suppose we need to make a data connection with different different databases as per our requirement which we given in form of string.
+So Naive solution for it will be
+1->Make a class  DataConnection(interface product), which has subtype oracleDataConnection, sqlDataConnection , postgresDataConnection
+2->Suppose we have a connection class which are handling all the connecctions, like database connection, cloudconnection , securityConnection
+3->We are making DataConnection in it
+
+//***************************************                   ************************************************              *********************************
+Without Desi
+public class Connection{
+
+   //DATA connection
+   public  DataConnection makeDataConnection(String dbName) throws Exception
+  { 
+       if(dbName.equals("oracle") return new oracleDataConnection();
+       else if(dbName.equals("sql") return new sqlDataConnection();
+       else if(dbName.equals("postgres") return new postgresDataConnection();
+       else  throw new IllegalArgumentException(e);
+
+   }
+
+  //Cloud Connection
+  //Security Connection
+
+
+}
+
+Principles voilated:
+ 1->Single responsiblity violated as connection class has to make these connection inside the class , either it make only one type of connection
+ 2->Extensibility reduced , or Open closed principle violate if new database comes
+ 3-> Suppose we need to change the configurations, or passing some arguments then it definitely cause problem,as close for modification
+ 4->Tightly coupled if in some case any exception occurs while creating the object , then proper error handling.
+
+
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+//Solution 1: Simple Factory Method
+ 1-> To overcome single responsibility issue we can use facotry class for different differnt connections separately which can handle exceptions also(4).
+ 2-> But 2 and 3 will not be solved properly 
+
+
+//facotry
+public DataConnectionFactory{
+
+     public static DataConnection makeConnection(String dbName)
+     { 
+      try
+       if(dbName.equals("oracle") return new oracleDataConnection();
+       else if(dbName.equals("sql") return new sqlDataConnection();
+       else if(dbName.equals("postgres") return new postgresDataConnection();
+       else  throw new IllegalArgumentException(e);
+
+      catch(Exception e) throw new IllegalArgumentException(e);
+      }
+}
+
+public class Connection{
+
+   //DATA connection
+   public  DataConnection makeDataConnection(String dbName) throws Exception
+  { 
+       return DataConnectionFactory.makeConnection(dbName)
+
+   }
+
+  //Cloud Connection
+  //Security Connection
+
+}
+
+
+Problems: 
+ 2->Extensibility reduced , or Open closed principle violate if new database comes
+ 3-> Suppose we need to change the configurations, or passing some arguments then it definitely cause problem,as close for modification
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+Solution 2: Proper Factory Pattern Implementation
+
+public  interface DataConnectionFactory {
+
+   public DataConnection makeDataConnection (String configurations);
+   
+}
+
+public class oracleDataConnectionFactory{
+     public DataConnection makeConnection(String configuation)
+      {
+      return new oracleDataConnection;
+      }
+}
+
+public class sqlDataConnectionFactory{
+     public DataConnection makeConnection(String configuation)
+      {
+      return new sqlDataConnection;
+      }
+}
+
+
+public class postgresDataConnectionFactory{
+     public DataConnection makeConnection(String configuation)
+      {
+      return new postgresDataConnection;
+      }
+}
+
+//extension
+public class cassandraConnectionFactory{
+     public DataConnection makeConnection(String configuation)
+      {
+      return new cassandraDataConnection;
+      }
+}
+
+//Abstraction class:public DataConnectionFactoryAbstraction{
+
+     public static DataConnection makeConnection(String dbName)
+     { 
+      try
+       if(dbName.equals("oracle") return oracleDataConnectionFactory.makeConnection();
+       else if(dbName.equals("sql") return sqlDataConnectionFactory.makeConnection();
+       else if(dbName.equals("postgres") return postgresDataConnectionFactory.makeConnection();
+      //can extend
+       else if(dbName.equals("cassandra") return cassandraDataConnectionFactory.makeConnection();
+       else  throw new IllegalArgumentException(e);
+
+      catch(Exception e) throw new IllegalArgumentException(e);
+      }
+}
+
+Problem solved 
+2->Extension can be done we need to just make a new facotry <some change always required, so we try to make in abstraction layer>
+3->We can set configuration in factroy class
+
+
 
