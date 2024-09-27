@@ -1,0 +1,222 @@
+Abstract Factory Pattern , it lets you to produce families,of related objects , without specifying their concrete classes.
+
+Example: Suppose we need to make the GUI, where we need to make a different different configuration of installation
+  like button-> MAC OS, MAC OFFICE, MAC PLayer
+             -> Window OS, Window Office, Windwo Player.
+
+
+
+
+
+//#######################################################################################################################
+Normal Approach
+
+  //Now as for different types, we need to make a factory
+
+  OS->Interface ---> MAC, WINDOW
+  OFFICE --> Interface ----> MAC, WINDOW
+  Player ---> Interface ---> MAC, WINDOW
+
+  Client
+depend on string we choose.
+
+Button Inteface -> 
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+OS <<ABSTRACt Interface>>
+
+
+OS--> createFeatures
+OFFICE --> createProducts
+PLAYER --> createPlayer
+
+
+
+<<ABSTRACT PRODUCT>>
+public interface  OS{
+  public void createFeatures();
+}
+
+public interface OFFICE{
+  public void createProducts();
+}
+
+public interface PLAYER{
+   public void createPlayer();
+}
+
+
+
+<<Concrete Product>>    <<MAC>>
+public class MacOS implements OS{
+   public void createFeatures(){
+   System.out.println("MAC OS");
+   }
+}
+
+public class MacOffice implements Office{
+
+   public void createProducts(){
+     System.out.println("MAC OFFICE");
+   }
+}
+
+public class MacPlayer implements Player{
+    public void createPlayer()
+    {
+      System.out.println("MAC Player");
+    }
+}
+
+<<Concrete Product>>  << Windows>>
+
+public class WindowsOS implements OS{
+   public void createFeatures(){
+   System.out.println("Windows OS");
+   }
+}
+
+public class WindowOffice implements Office{
+
+   public void createProducts(){
+     System.out.println("Window OFFICE");
+   }
+}
+
+public class WindowPlayer implements Player{
+    public void createPlayer()
+    {
+      System.out.println("Window Player");
+    }
+}
+
+
+//Now writing client code.  ----> our main class
+public class Client{
+
+   public class void main(String []args)
+   { 
+      String input = "MAC";
+
+           if(input.equals("MAC"))
+           {
+              createMacOS;
+              createMacOffice;
+              createMacPlayer;
+           }
+           else if(input.equals("Windows"))
+           {
+              createWindowOS;
+              createWindowOffice;
+              createWindowPlayer;
+           }
+    
+   }
+
+}
+
+Problems: 
+1>> First we are using the void, but in case of returning we need to make a separate class; that is abstraction class like createSystem.
+2>> Here we have not done any kind of exception handling.
+3>> Suppose with the time we need to make another, type of OperatingSystem, liek oracle then we need to change the client code(which violates OC principle)
+
+
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+//Professional approach ,
+1>> We can use another layer of abstraction we deletgate our responsiblity of creation to that where we can handle exception handling.
+2>> But suppose we are needed, to make some config changes as per need then we can need not to add them in 
+
+//We need to make that pattern in factory kind a interface as we are encountering the same problem in as factory problem.
+
+<<ABSTRACT>>
+public interface SystemFactory{
+
+   public OS createOS();
+   public Office createOffice();
+   pubic  Player createPlayer();
+ 
+}
+
+<<Concreate>>
+public class MacSytemFactory implements{ 
+
+  public  OS createOS()
+  {
+      return new MacOS();
+  }
+
+   public Office createOffice(){
+     return new MacOffice();
+   }
+
+   public Player createPlayer(){
+      return new MacPlayer();
+   }
+}
+
+public class MacSytemFactory implements{ 
+
+  public  OS createOS()
+  {
+      return new MacOS();
+  }
+
+   public Office createOffice(){
+     return new MacOffice();
+   }
+
+   public Player createPlayer(){
+      return new MacPlayer();
+   }
+}
+
+public class WindowSystemFactory implements SystemFactory{
+
+   public  OS createOS()
+  {
+      return new WindowOS();
+  }
+
+   public Office createOffice(){
+     return new WindowOffice();
+   }
+
+   public Player createPlayer(){
+      return new WindowPlayer();
+   }
+}
+
+//client 
+
+public class Client{
+
+   public static void main(String[]args)
+   {
+      press(new MacSystemFactory());
+   }
+
+   public void press(SystemFactory factory)
+   { 
+        factory.create();
+        
+   }  
+
+}
+
+//Problems solved
+//IF we want new configurations along with product we can direct delegate the factory.
+//Here we just pass the argument new facotry and we get the answer.
+//Here we can change the whole facotry and configuration as per need.
+//Abstract --> Product --> OS -> MS, window, Office ->MS, Window,  Player -> MS, Window
+//Factory-> OS, office, Player -->   MacFacotry, PlayerFactory.
+
+
+
+
+
+
+
+
+  
