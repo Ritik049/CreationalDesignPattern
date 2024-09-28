@@ -1,0 +1,123 @@
+It is used to create the complex objects.It is used when we want to create object with different configurations
+Used in java core libraries: java.lang.StringBuilder;  java.lang.StringBuffer etc.
+
+--> It is used when we need to create object by calling the constructor with a larget number of arguments but with different configuarions and different amount.
+--> It is used when we  need to create an object with series of steps (which are same) but product created is differnt.
+
+Example : Car and CarManual
+
+Usage: One is director class which decides which type of prodcut it made , but we need to give a builder class to it as a argument.
+
+** In builder class we not specifiy the interface of product/product so we can typically changes the type of product.
+** In builder interface we have only set(functions)
+
+Case Study: Suppose we are building a car , as we are builiding it, so we need to provide our customer a manual also.
+But here is a catch that for every part (assembling) we need to elaborate that features in manual also.
+
+So a kind of commanalities are the steps of assembling and descirbing those in manual (in a series of steps)
+
+Classes:
+Builder <inteface> (have only methods) 
+Concrete Builders (have methods and the resultant product)
+Product(no need to make interface)
+Client code 
+Director
+
+
+public interface Builder{
+
+   
+
+   Setters.
+   public void setCarType(CarType type);
+   public void setEngine(Engine engine);
+   public void setDashboard(Dashboard dashboard);
+   public void setTyre(Tyre tyre);
+   public void  setSeat(Seat seat);
+   
+   
+}
+
+public class CarBuilder{
+
+   CarType type;
+   Engine engine;
+   Dashboard dashboard;
+   Tyre tyre;
+   Seat seat;
+
+  @Override
+    public void setCarType(CarType type) this.type  = type;
+   public void setEngine(Engine engine) this.engine = engine;
+   public void setDashboard(Dashboard dashboard) this.dashboard = dashboard;
+   public void setTyre(Tyre tyre) this.tyre = tyre;
+   public void  setSeat(Seat seat) this.seat = seat;
+
+  public Car result()
+  {
+    return new Car(type,engine,dashboard,tyre,seat);
+  }
+   
+}
+
+public class CarManualBuilder{
+
+   CarType type;
+   Engine engine;
+   Dashboard dashboard;
+   Tyre tyre;
+   Seat seat;
+
+  @Override
+    public void setCarType(CarType type) this.type  = type;
+   public void setEngine(Engine engine) this.engine = engine;
+   public void setDashboard(Dashboard dashboard) this.dashboard = dashboard;
+   public void setTyre(Tyre tyre) this.tyre = tyre;
+   public void  setSeat(Seat seat) this.seat = seat;
+
+    public  CarManual result(){
+     return  new CarManual(type,engine,dashboard, tyre, seat);
+      }
+}
+
+
+//Some steps: Director itself dont return the product , it just call the builder to set the arguments only.(this is what it is used to call the constructors only)
+//Builder result provide us product
+//Director
+ public class Director{
+
+    public void makeCar(Builder builder) {
+      builder.setCarType(new SUV());
+      builder.setEngine(new Engine());
+      builder.setDashboard(new Dashboard());
+      builder.setTyre(new Tyre());
+    }
+
+    public void makeCarManual(Builder builder)
+{
+        builder.setCarType(new SUV());
+      builder.setEngine(new Engine());
+      builder.setDashboard(new Dashboard());
+      builder.setTyre(new Tyre());
+}
+
+ }
+
+//Client code 
+
+public class client{
+
+  Director = new Director();
+  Builder builder  = new CarBuilder();  //it is a class which calls the constructor of product of another class;
+   director.makeCar(builder);
+  Car car = builder.result();
+
+   Builder builder = new CarManual();
+    director.makeCarManual(builder);
+   CarManual  carManual = builder.result();
+
+
+}
+
+
+
