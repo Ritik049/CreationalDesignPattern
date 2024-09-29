@@ -1,0 +1,79 @@
+Singleton Pattern : It is used to create only one instance of class. These objects are mostly the globally accessed shared resources. eg database
+
+
+* WE make constructor private
+*Database
+public class Database{
+
+private Database instance;  
+
+private Database();
+
+ public static getInstance()
+{
+    if(instance==null)
+     { 
+      instance = new Database();
+     }
+
+return instance;
+}
+      
+}  
+
+
+//Problems : Synchronisation
+
+//We use synchronized keyword
+public class Database{
+
+private Database instance;  
+
+private Database();
+
+ public static getInstance()
+{ 
+  if(instance == null)
+  {synchronized(Database)
+  {  
+
+    if(instance==null)
+     { 
+      instance = new Database();
+     }
+}
+}
+
+return instance;
+}
+
+
+
+package SingletonDesignPattern;
+
+public class Singleton {
+
+    private static Singleton instance;
+
+    public String s;
+
+    private Singleton(String s){
+        this.s = s;
+    }
+
+    public static  Singleton getInstance(String val)
+    {
+         if(instance==null)
+         {
+             synchronized (Singleton.class)
+             {
+                 if(instance==null)
+                 {
+                      instance = new Singleton(val);
+                 }
+             }
+         }
+
+         return instance;
+    }
+}
