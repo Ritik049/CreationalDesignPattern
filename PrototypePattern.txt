@@ -1,0 +1,110 @@
+Prototype: It is used to create the exact new copy of object. 
+
+What problem arises while creating new object of like same;
+1-> suppose we have rectangle class, we want to clone it. then what we do  we make another new rectangle class and put field values on this.
+   i.e.  
+ Rectangle rectangle = new Rectangle(3,3);
+     Rectangle another = new Rectangle(this); //This can be done but our new object get based on that first object. <We should avoid this , as 
+ in some cases, we need not to produce the (arguments differntly which consume lot of resources).
+
+
+Problem 
+Suppose we make a new System configuration, where we have a database connection , no. of connections, 
+
+** We can make only interface which have only clone method, or we can use to make an abstract class (depends on need);
+** We can tend to make a kind of prototype registry act as cache and give us newly created prototype object.
+
+public class DataConnection {
+
+    private String connectionString;
+    public DataConnection()
+    {
+        connectionString = "It is initialised";
+    }
+}
+
+
+
+public abstract class SystemConfiguration {
+
+    public   DataConnection dataConnection;
+    public  int connectionNumber;
+
+    public SystemConfiguration(){}
+
+    public  SystemConfiguration(SystemConfiguration config)
+    {
+        this.dataConnection = config.dataConnection;
+        this.connectionNumber = config.connectionNumber;
+    }
+
+    public  abstract SystemConfiguration clone();  //We not put any argument here.
+
+
+
+}
+
+
+
+
+public class System1  extends  SystemConfiguration{
+
+    public DataConnection dataConnection;
+    public int connectionNumber;
+    public int properties;
+
+    public System1(DataConnection dataConnection, int connectionNumber, int properties)
+    {
+        this.dataConnection = dataConnection;
+        this.connectionNumber = connectionNumber;
+        this.properties = properties;
+    }
+
+    public System1(System1 system)
+    {
+        if(system!=null)
+        {
+            this.dataConnection = system.dataConnection;
+            this.connectionNumber = system.connectionNumber;
+            this.properties = system.properties;
+        }
+    }
+
+    public SystemConfiguration clone()
+    {
+        SystemConfiguration  system  = new System1(this);
+        return system;
+    }
+
+    public  boolean equals(System1 system)
+    {
+
+        System.out.println("DATA CONNECTION "+ this.dataConnection +" "+system.dataConnection);
+        if(this.dataConnection.equals(system.dataConnection) && this.connectionNumber==system.connectionNumber && this.properties == system.properties) return true;
+
+
+        return false;
+    }
+
+}
+//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
+// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+public class Main {
+    public static void main(String[] args) {
+        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
+        // to see how IntelliJ IDEA suggests fixing it.
+        System.out.println("Hello and welcome!");
+
+        DataConnection dataConnection = new DataConnection();
+
+        System1 system = new System1(dataConnection , 23,426);
+
+        System1 system2 = (System1) system.clone();
+
+        boolean ans = system.equals(system2);
+
+        System.out.println("Ans "+ans);
+
+
+    }
+}
